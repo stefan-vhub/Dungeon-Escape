@@ -59,6 +59,11 @@ public class Shop : MonoBehaviour
     {
         if(_player.diamonds >= currentItemCost)
         {
+            if (currentSelectedItem == 2)
+            {
+                GameManager.Instance.HasKeyToCastle = true;
+            }
+
             _player.diamonds -= currentItemCost;
             Debug.Log("Purcheased " + currentSelectedItem);
             Debug.Log("Remaining Gems " + _player.diamonds);

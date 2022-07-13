@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
@@ -20,6 +21,12 @@ public class UIManager : MonoBehaviour
 
     public Text playerGemCountText;
     public Image selectionImg;
+    public TextMeshProUGUI gemCountText;
+
+    private void Awake()
+    {
+        _instance = this;
+    }
 
     public void OpenShop(int gemCount)
     {
@@ -31,8 +38,11 @@ public class UIManager : MonoBehaviour
         selectionImg.rectTransform.anchoredPosition = new Vector2(selectionImg.rectTransform.anchoredPosition.x, yPos);
     }
 
-    private void Awake()
+    public void UpdateGemCount(int count)
     {
-        _instance = this;
+        gemCountText.text = "" + count;
     }
+
+
+
 }
