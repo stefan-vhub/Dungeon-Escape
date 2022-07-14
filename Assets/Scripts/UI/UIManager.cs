@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class UIManager : MonoBehaviour
     public Text playerGemCountText;
     public Image selectionImg;
     public TextMeshProUGUI gemCountText;
+    public Image[] healthBars;
 
     private void Awake()
     {
@@ -43,6 +45,19 @@ public class UIManager : MonoBehaviour
         gemCountText.text = "" + count;
     }
 
+    public void UpdateLives(int liveRemaining)
+    {
+        for (int i = 0; i <= liveRemaining; i++)
+        {
+            if(i==liveRemaining)
+            {
+                healthBars[i].enabled = false;
+            }
+        }
+    }
 
-
+    public void GoMainMenu()
+    {
+        SceneManager.LoadScene("Main Menu");
+    }
 }

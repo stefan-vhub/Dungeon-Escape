@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class Player : MonoBehaviour, IDamageable
 {
@@ -24,6 +25,7 @@ public class Player : MonoBehaviour, IDamageable
         _playerAnim = GetComponent<PlayerAnimation>();
         _playerSprite = GetComponentInChildren<SpriteRenderer>();
         _swordArcSprite = transform.GetChild(1).GetComponent<SpriteRenderer>();
+        Health = 4;
     }
 
     // Update is called once per frame
@@ -32,7 +34,7 @@ public class Player : MonoBehaviour, IDamageable
         Movement();
 
         // If the player presses the left click, animation attacks start
-         if(Input.GetMouseButtonDown(0) && IsGrounded() == true)
+         if(CrossPlatformInputManager.GetButtonDown("A Button") && IsGrounded() == true)
           {
             _playerAnim.Attack(); // Start attack animation
         }
@@ -41,15 +43,17 @@ public class Player : MonoBehaviour, IDamageable
 
     void Movement()
     {
-        float move = Input.GetAxisRaw("Horizontal"); // Save the player's movement and the direction it is going
+        //float move = Input.GetAxisRaw("Horizontal"); // Save the player's movement and the direction it is going
+        float move = CrossPlatformInputManager.GetAxis("Horizontal"); // Mobile Move
+
         _grounded = IsGrounded(); // For jump animation, to return to normal
 
         // Changing direction depending on the player's movement left or right
         if (move > 0) Flip(true);
         else if (move < 0) Flip(false);
 
-        // If player press the space and Is Grounded is true, the player jump
-        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded() == true)
+        // If player press the space and Is Grounded is true, the player jump // Input.GetKeyDown(KeyCode.Space) For Pc
+        if (CrossPlatformInputManager.GetButtonDown("B Button") && IsGrounded() == true)
         {
             _rigid.velocity = new Vector2(_rigid.velocity.x, _jumpForce); // New position for player
             StartCoroutine(ResetJumpRoutine()); // Start a IEnumerator
@@ -116,7 +120,19 @@ public class Player : MonoBehaviour, IDamageable
 
     public void Damage()
     {
+        if (Health < 1)
+        {
+            return;
+        }
+
         Debug.Log("Player: Attack()");
+        Health--;
+        UIManager.Instance.UpdateLives(Health);
+
+        if(Health < 1)
+        {
+            _playerAnim.Death();
+        }
     }
 
     public void AddGems(int amount)
@@ -124,5 +140,4 @@ public class Player : MonoBehaviour, IDamageable
         diamonds += amount;
         UIManager.Instance.UpdateGemCount(diamonds);
     }
-
 }
